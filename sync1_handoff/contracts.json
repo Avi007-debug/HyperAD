@@ -1,0 +1,29 @@
+{
+  "temporal_bellman_ford": {
+    "function": "run_temporal_bellman_ford(graph, da_nodes=None, max_hops=10, top_k=5, min_score_threshold=0.1)",
+    "returns": "List[EscalationPath]",
+    "summary_helper": "summarise_paths(paths)"
+  },
+  "tarjan_scc": {
+    "function": "run_tarjan_scc(graph, min_size=2, include_all_edges=False)",
+    "returns": "List[SCCFinding]",
+    "enrich_helper": "enrich_scc_findings(findings, graph)"
+  },
+  "hits": {
+    "function": "run_hits(graph, max_iter=200, tol=1e-8, top_n=20, weighted=True, da_nodes=None)",
+    "returns": "Tuple[List[HITSResult], Dict]",
+    "helpers": [
+      "compute_attack_centrality(results)",
+      "hits_to_priority_list(results, top_n=20)"
+    ]
+  },
+  "blast_radius": {
+    "function": "run_blast_radius(graph, compromised_node, da_nodes=None, max_hops=10, weight_cutoff=0.0)",
+    "returns": "BlastRadiusResult",
+    "helpers": [
+      "get_critical_path_to_da(graph, compromised_node, da_nodes=None)",
+      "get_lateral_movement_subgraph(graph, result)",
+      "compare_blast_radii(before, after)"
+    ]
+  }
+}
