@@ -24,8 +24,8 @@ from typing import Dict, List, Optional, Set, Tuple
 
 import networkx as nx
 
-from utils.models import EdgeType, NodeType
-from utils.decay  import temporal_weight
+from algorithm.models import EdgeType, NodeType
+from algorithm.decay  import temporal_weight
 
 
 # ── Shared helpers ────────────────────────────────────────────────────────────

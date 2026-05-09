@@ -32,8 +32,8 @@ from typing import Dict, List, Optional, Set, Tuple
 
 import networkx as nx
 
-from utils.decay import invert_weight, score_path_weights, temporal_weight
-from utils.models import (
+from algorithm.decay import invert_weight, score_path_weights, temporal_weight
+from algorithm.models import (
     BASE_RISK, EdgeType, EscalationPath, RiskLevel
 )
 

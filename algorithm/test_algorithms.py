@@ -34,30 +34,30 @@ import pytest
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
-from algorithms.blast_radius         import (
+from algorithm.blast_radius         import (
     compare_blast_radii, detect_crown_jewels,
     get_critical_path_to_da, get_lateral_movement_subgraph,
     run_blast_radius,
 )
-from algorithms.hits_scorer          import (
+from algorithm.hits_scorer          import (
     cluster_hubs_by_target, compute_attack_centrality,
     hits_to_priority_list, run_hits,
 )
-from algorithms.tarjan_scc           import (
+from algorithm.tarjan_scc           import (
     enrich_scc_findings, get_delegation_graph_stats,
     run_tarjan_scc,
 )
-from algorithms.temporal_bellman_ford import (
+from algorithm.temporal_bellman_ford import (
     build_graph_from_snapshot, run_temporal_bellman_ford,
     summarise_paths,
 )
-from tests.graph_factory             import (
+from algorithm.graph_factory             import (
     graph_to_snapshot, make_small_graph, make_tiny_graph,
 )
-from utils.decay                     import (
+from algorithm.decay                     import (
     invert_weight, lambda_sensitivity, temporal_weight,
 )
-from utils.models                    import EdgeType, EscalationPath, RiskLevel
+from algorithm.models                    import EdgeType, EscalationPath, RiskLevel
 
 # ═════════════════════════════════════════════════════════════════════════════
 # SECTION 1 — Decay function
@@ -528,7 +528,7 @@ class TestBlastRadius:
     def test_crown_jewels_detected(self):
         """Crown jewel nodes (fileserver, DC$) must be flagged in blast radius."""
         G = nx.DiGraph()
-        from utils.decay import temporal_weight
+        from algorithm.decay import temporal_weight
         G.add_node("attacker",      type="User")
         G.add_node("FileServer01$", type="Computer")
         G.add_node("DC01$",         type="Computer")

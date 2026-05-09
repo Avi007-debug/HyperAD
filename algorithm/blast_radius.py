@@ -36,7 +36,7 @@ from typing import Dict, List, Optional, Set, Tuple
 
 import networkx as nx
 
-from utils.models import BlastRadiusResult, NodeType, RiskLevel
+from algorithm.models import BlastRadiusResult, NodeType, RiskLevel
 
 logger = logging.getLogger(__name__)
 

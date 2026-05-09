@@ -16,7 +16,7 @@ import math
 import logging
 from typing import Dict, Optional, Tuple
 
-from utils.models import BASE_RISK, EdgeType
+from algorithm.models import BASE_RISK, EdgeType
 
 logger = logging.getLogger(__name__)
 

@@ -43,7 +43,7 @@ class EdgeType(str, Enum):
     ALLOWED_TO_ACT          = "AllowedToActOnBehalfOf"
     GENERIC_ALL             = "GenericAll"
     WRITE_DACL              = "WriteDACL"
-      WRITE_OWNER             = "WriteOwner"
+    WRITE_OWNER             = "WriteOwner"
     GENERIC_WRITE           = "GenericWrite"
     DC_SYNC                 = "DCSync"
     GET_CHANGES             = "GetChanges"

@@ -31,7 +31,7 @@ from typing import Dict, List, Set, Tuple
 
 import networkx as nx
 
-from utils.models import EdgeType, NodeType, RiskLevel, SCCFinding
+from algorithm.models import EdgeType, NodeType, RiskLevel, SCCFinding
 
 logger = logging.getLogger(__name__)
 

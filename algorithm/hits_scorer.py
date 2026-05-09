@@ -41,7 +41,7 @@ from typing import Dict, List, Optional, Set, Tuple
 import networkx as nx
 import numpy as np
 
-from utils.models import HITSResult, RiskLevel
+from algorithm.models import HITSResult, RiskLevel
 
 logger = logging.getLogger(__name__)
 
@@ -154,7 +154,7 @@ def run_hits(
     # ── Build result objects ──────────────────────────────────────────────────
     # Pre-compute DA-path set if not given
     if da_nodes is None:
-        from algorithms.temporal_bellman_ford import _is_da_node
+        from algorithm.temporal_bellman_ford import _is_da_node
         da_nodes = {n for n in nodes if _is_da_node(str(n))}
 
     # BFS from each DA node in the REVERSED graph to find which nodes
@@ -244,7 +244,7 @@ def cluster_hubs_by_target(
     Returns: { da_node_name: [list of hub nodes that can reach it] }
     """
     if da_nodes is None:
-        from algorithms.temporal_bellman_ford import _is_da_node
+        from algorithm.temporal_bellman_ford import _is_da_node
         da_nodes = {n for n in graph.nodes if _is_da_node(str(n))}
 
     high_hubs = {r.node for r in results if r.hub > 0.2}
