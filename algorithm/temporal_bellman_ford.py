@@ -62,8 +62,7 @@ def _is_da_node(node_name: str) -> bool:
 
 def _extract_path_details(
     graph:       nx.DiGraph,
-    pred:        Dict[str, Optional[str]],
-    target_node: str,
+    nodes:       List[str],
     source_node: str,
 ) -> Tuple[List[str], List[str], List[float]]:
     """
@@ -72,13 +71,6 @@ def _extract_path_details(
     Returns:
         (node_list, edge_type_list, weight_list)
     """
-    nodes: List[str] = []
-    cur = target_node
-    while cur is not None:
-        nodes.append(cur)
-        cur = pred.get(cur)
-    nodes.reverse()
-
     if not nodes or nodes[0] != source_node:
         return [], [], []
 
@@ -154,8 +146,8 @@ def run_temporal_bellman_ford(
     for source in source_nodes:
         try:
             # nx.single_source_bellman_ford returns (dist_dict, pred_dict)
-            dist, pred = nx.single_source_bellman_ford(
-                cost_graph, source, weight="cost", cutoff=max_hops
+            dist, path_map = nx.single_source_bellman_ford(
+                cost_graph, source, weight="cost"
             )
         except nx.NetworkXUnbounded:
             # Negative-weight cycle detected — this is itself a Critical finding
@@ -172,10 +164,14 @@ def run_temporal_bellman_ford(
             if da not in dist or da == source:
                 continue
 
-            nodes, etypes, weights = _extract_path_details(
-                graph, pred, da, source
-            )
+            raw_nodes = path_map.get(da, [])
+            nodes, etypes, weights = _extract_path_details(graph, raw_nodes, source)
             if not nodes:
+                continue
+
+            # Enforce hop limit manually (NetworkX single_source_bellman_ford
+            # does not support cutoff in this version).
+            if len(nodes) - 1 > max_hops:
                 continue
 
             # Guard: skip paths with cycles (repeated nodes)

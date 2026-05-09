@@ -27,9 +27,9 @@ DEFAULT_LAMBDA = 0.02
 # Cap staleness at 365 days — beyond that it's effectively zero anyway.
 MAX_STALENESS_DAYS = 365
 
-# Minimum weight floor — even a 10-year-old permission has *some* risk
-# because it could be re-activated without triggering a new timestamp.
-MIN_WEIGHT_FLOOR = 0.05
+# Minimum absolute floor. Keep at 0.0 so high-risk edges still remain
+# strictly higher than low-risk edges even at max staleness.
+MIN_WEIGHT_FLOOR = 0.0
 
 
 def temporal_weight(

@@ -132,7 +132,7 @@ def run_blast_radius(
     *,
     da_nodes:         Optional[Set[str]] = None,
     max_hops:         int   = 10,
-    weight_cutoff:    float = 0.05,
+    weight_cutoff:    float = 0.0,
 ) -> BlastRadiusResult:
     """
     Compute blast radius using bidirectional BFS.

@@ -215,6 +215,8 @@ def compute_attack_centrality(results: List[HITSResult]) -> List[Dict]:
     enriched = []
     for r in results:
         d = r.to_dict()
+        d["hub_score"] = d["hub"]
+        d["authority_score"] = d["authority"]
         d["attack_centrality"] = round(r.hub * r.authority, 6)
         d["interpretation"] = (
             "Entry point AND target — highest priority"
