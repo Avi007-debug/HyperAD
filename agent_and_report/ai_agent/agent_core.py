@@ -3,22 +3,55 @@ from langchain_community.chat_models import ChatOllama
 from langchain.agents import initialize_agent, AgentType, Tool
 from langchain.schema import SystemMessage
 
-# Mock implementations for tools
+import json
+from algorithm.temporal_bellman_ford import run_temporal_bellman_ford, summarise_paths
+from algorithm.tarjan_scc import run_tarjan_scc, enrich_scc_findings
+from algorithm.hits_scorer import run_hits, hits_to_priority_list
+from algorithm.blast_radius import run_blast_radius
+from algorithm.graph_factory import make_tiny_graph
+
+# Initialize a static graph for agent testing
+AD_GRAPH, AD_ANSWERS = make_tiny_graph()
+DA_NODES = AD_ANSWERS["da_nodes"]
+
 def query_graph(query: str) -> str:
-    """Mock query to the Graph Engine."""
-    return f"Graph results for query: {query}. Node A connected to Node B."
+    """Query the AD graph for basic node info."""
+    nodes = list(AD_GRAPH.nodes(data=True))
+    results = [n for n in nodes if query.lower() in str(n[0]).lower()]
+    return json.dumps([{"node": n[0], "attributes": n[1]} for n in results][:5])
 
 def get_paths(source: str, target: str) -> str:
-    """Mock path retrieval from Graph Engine."""
-    return f"Path from {source} to {target}: {source} -> Group1 -> {target}"
+    """Retrieve shortest paths using Temporal Bellman-Ford."""
+    targets = {target} if target and target.strip() else DA_NODES
+    paths = run_temporal_bellman_ford(AD_GRAPH, da_nodes=targets)
+    if source and source.strip():
+        paths = [p for p in paths if p.source.lower() == source.lower()]
+    if not paths:
+        return "No paths found."
+    return json.dumps([p.to_dict() for p in paths], indent=2)
 
 def blast_radius(node: str) -> str:
-    """Mock blast radius calculation."""
-    return f"Blast radius for {node}: High. Compromises 15 other critical nodes."
+    """Calculate blast radius from a compromised node."""
+    res = run_blast_radius(AD_GRAPH, node.strip(), da_nodes=DA_NODES)
+    return json.dumps(res.to_dict(), indent=2)
 
 def get_findings() -> str:
-    """Mock retrieval of security findings."""
-    return "Findings: 3 Kerberoasting accounts, 2 DCSync vulnerabilities."
+    """Retrieve combined security findings."""
+    paths = run_temporal_bellman_ford(AD_GRAPH, da_nodes=DA_NODES)
+    bf_summary = summarise_paths(paths)
+    
+    sccs = run_tarjan_scc(AD_GRAPH)
+    enriched_sccs = enrich_scc_findings(sccs, AD_GRAPH)
+    
+    hits, _ = run_hits(AD_GRAPH, top_n=5)
+    hits_priority = hits_to_priority_list(hits)
+    
+    report = {
+        "bellman_ford_summary": bf_summary,
+        "scc_findings": enriched_sccs,
+        "hits_priority": hits_priority
+    }
+    return json.dumps(report, indent=2)
 
 # Define LangChain Tools
 tools: List[Tool] = [
